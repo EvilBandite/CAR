@@ -65,15 +65,28 @@ class DialogueBox extends FlxSpriteGroup
 		var hasDialog = false;
 		switch (PlayState.SONG.song.toLowerCase())
 		{
-			case 'handy':
+			case 'senpai':
 				hasDialog = true;
-				box.frames = Paths.getSparrowAtlas('speech_bubble_talking', 'shared');
-				box.animation.addByPrefix('normalOpen', 'Speech Bubble Normal Open', 24, false);
-				box.animation.addByIndices('normal', 'speech bubble normal', [4], "", 24);
-				box.width = 200;
-				box.height = 200;
-				box.x = -100;
-				box.y = 365;
+				box.frames = Paths.getSparrowAtlas('weeb/pixelUI/dialogueBox-pixel');
+				box.animation.addByPrefix('normalOpen', 'Text Box Appear', 24, false);
+				box.animation.addByIndices('normal', 'Text Box Appear', [4], "", 24);
+			case 'roses':
+				hasDialog = true;
+				FlxG.sound.play(Paths.sound('ANGRY_TEXT_BOX'));
+
+				box.frames = Paths.getSparrowAtlas('weeb/pixelUI/dialogueBox-senpaiMad');
+				box.animation.addByPrefix('normalOpen', 'SENPAI ANGRY IMPACT SPEECH', 24, false);
+				box.animation.addByIndices('normal', 'SENPAI ANGRY IMPACT SPEECH', [4], "", 24);
+
+			case 'thorns':
+				hasDialog = true;
+				box.frames = Paths.getSparrowAtlas('weeb/pixelUI/dialogueBox-evil');
+				box.animation.addByPrefix('normalOpen', 'Spirit Textbox spawn', 24, false);
+				box.animation.addByIndices('normal', 'Spirit Textbox spawn', [11], "", 24);
+
+				var face:FlxSprite = new FlxSprite(320, 170).loadGraphic(Paths.image('weeb/spiritFaceForward'));
+				face.setGraphicSize(Std.int(face.width * 6));
+				add(face);
 		}
 
 		this.dialogueList = dialogueList;
@@ -81,23 +94,23 @@ class DialogueBox extends FlxSpriteGroup
 		if (!hasDialog)
 			return;
 		
-			portraitLeft = new FlxSprite(-1500, 10);
-			portraitLeft.frames = Paths.getSparrowAtlas('handyport', 'shared');
-			portraitLeft.animation.addByPrefix('enter', 'HANDY Portrait Enter instance', 24, false);
-			portraitLeft.setGraphicSize(Std.int(portraitLeft.width * PlayState.daPixelZoom * 0.175));
-			portraitLeft.updateHitbox();
-			portraitLeft.scrollFactor.set();
-			add(portraitLeft);
-			portraitLeft.visible = false;
+		portraitLeft = new FlxSprite(-20, 40);
+		portraitLeft.frames = Paths.getSparrowAtlas('weeb/senpaiPortrait');
+		portraitLeft.animation.addByPrefix('enter', 'Senpai Portrait Enter', 24, false);
+		portraitLeft.setGraphicSize(Std.int(portraitLeft.width * PlayState.daPixelZoom * 0.9));
+		portraitLeft.updateHitbox();
+		portraitLeft.scrollFactor.set();
+		add(portraitLeft);
+		portraitLeft.visible = false;
 
-			portraitRight = new FlxSprite(-50, 40);
-			portraitRight.frames = Paths.getSparrowAtlas('boyfriendPortrait', 'shared');
-			portraitRight.animation.addByPrefix('enter', 'BF Portrait Enter instance 1', 24, false);
-			portraitRight.setGraphicSize(Std.int(portraitRight.width * PlayState.daPixelZoom * 0.15));
-			portraitRight.updateHitbox();
-			portraitRight.scrollFactor.set();
-			add(portraitRight);
-			portraitRight.visible = false;	  
+		portraitRight = new FlxSprite(0, 40);
+		portraitRight.frames = Paths.getSparrowAtlas('weeb/bfPortrait');
+		portraitRight.animation.addByPrefix('enter', 'Boyfriend portrait enter', 24, false);
+		portraitRight.setGraphicSize(Std.int(portraitRight.width * PlayState.daPixelZoom * 0.9));
+		portraitRight.updateHitbox();
+		portraitRight.scrollFactor.set();
+		add(portraitRight);
+		portraitRight.visible = false;
 		
 		box.animation.play('normalOpen');
 		box.setGraphicSize(Std.int(box.width * PlayState.daPixelZoom * 0.9));
@@ -106,6 +119,10 @@ class DialogueBox extends FlxSpriteGroup
 
 		box.screenCenter(X);
 		portraitLeft.screenCenter(X);
+
+		handSelect = new FlxSprite(FlxG.width * 0.9, FlxG.height * 0.9).loadGraphic(Paths.image('weeb/pixelUI/hand_textbox'));
+		add(handSelect);
+
 
 		if (!talkingRight)
 		{
@@ -138,7 +155,7 @@ class DialogueBox extends FlxSpriteGroup
 			portraitLeft.visible = false;
 		if (PlayState.SONG.song.toLowerCase() == 'thorns')
 		{
-			portraitLeft.color = FlxColor.BLACK;
+			portraitLeft.visible = false;
 			swagDialogue.color = FlxColor.WHITE;
 			dropText.color = FlxColor.BLACK;
 		}
@@ -160,7 +177,7 @@ class DialogueBox extends FlxSpriteGroup
 			dialogueStarted = true;
 		}
 
-		if (FlxG.keys.justPressed.ANY  && dialogueStarted == true)
+		if (PlayerSettings.player1.controls.ACCEPT && dialogueStarted == true)
 		{
 			remove(dialogue);
 				
